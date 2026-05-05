@@ -38,50 +38,59 @@ export function ResumeUpload({ onComplete, onCancel }: ResumeUploadProps) {
     setLoading(true);
     setError(null);
 
-    const formData = new FormData();
-    formData.append('resume', file);
-
     try {
       console.log('Sending file to extraction API...');
+
+      // Convert file to base64
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          resolve(result.split(',')[1]); // strip "data:...;base64," prefix
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
       // 1. Extract text via backend
       const response = await fetch('/api/extract-text', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',  // ← changed
+        },
+        body: JSON.stringify({
+          fileData: base64,        // ← changed
+          mimeType: file.type,     // ← changed
+        }),
       });
 
       if (!response.ok) {
         const contentType = response.headers.get('content-type');
         let errorMessage = `Server responded with ${response.status}`;
-        
         if (contentType && contentType.includes('application/json')) {
           const errData = await response.json().catch(() => ({}));
           errorMessage = errData.error || errorMessage;
         } else {
           const text = await response.text().catch(() => '');
           console.error('Non-JSON error response:', text.substring(0, 500));
-          errorMessage = 'The server returned an unexpected response (HTML instead of JSON). This usually happens if the backend route is missing or crashing.';
+          errorMessage = 'The server returned an unexpected response.';
         }
         throw new Error(errorMessage);
       }
-      
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Server returned OK but response is not JSON.');
-      }
 
-      const { text } = await response.json();
+      const { result } = await response.json();  // ← changed "text" to "result"
       console.log('Text extracted successfully, calling AI analysis...');
 
       // 2. Analyze via frontend Gemini
-      const analysis = await analyzeResumeText(text);
+      const analysis = await analyzeResumeText(result);
       console.log('AI Analysis complete:', analysis);
-      
+
       // 3. Save to Firestore
       try {
         await addDoc(collection(db, 'resumes'), {
           userId: auth.currentUser.uid,
           fileName: file.name,
-          rawText: text,
+          rawText: result,
           technicalSkills: analysis.technicalSkills || analysis.TechnicalSkills || analysis.technical_skills || [],
           softSkills: analysis.softSkills || analysis.SoftSkills || analysis.soft_skills || [],
           experience: analysis.yearsOfExperience || analysis.YearsOfExperience || analysis.years_of_experience || 0,
@@ -102,7 +111,7 @@ export function ResumeUpload({ onComplete, onCancel }: ResumeUploadProps) {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
