@@ -1,4 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
+
+export const config = {
+  api: { bodyParser: { sizeLimit: '10mb' } },
+};
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -6,37 +10,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Manually parse body if undefined
     let body = req.body;
-    if (!body || typeof body === 'undefined') {
+    if (!body) {
       const chunks = [];
-      for await (const chunk of req) {
-        chunks.push(chunk);
-      }
+      for await (const chunk of req) chunks.push(chunk);
       body = JSON.parse(Buffer.concat(chunks).toString());
     }
 
     const { fileData, mimeType } = body;
-
     if (!fileData || !mimeType) {
       return res.status(400).json({ error: "fileData and mimeType are required" });
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        { inlineData: { data: fileData, mimeType } },
+        { text: "Extract all text content from this resume. Return the raw text only." }
+      ],
+    });
 
-    const result = await model.generateContent([
-      {
-        inlineData: {
-          data: fileData,
-          mimeType: mimeType
-        }
-      },
-      "Extract all skills from this resume. Return as JSON."
-    ]);
-
-    const text = result.response.text();
-    return res.status(200).json({ result: text });
+    return res.status(200).json({ result: response.text });
 
   } catch (error) {
     console.error(error);
