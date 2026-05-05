@@ -1,14 +1,32 @@
-export default async function handler(req, res) {
-  const apiKey = process.env.GEMINI_API_KEY;
+const safeParseJSON = (text: string) => {
+  const cleaned = text.replace(/```json\n?/gi, '').replace(/```\n?/gi, '').trim();
+  return JSON.parse(cleaned);
+};
 
-  const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" + apiKey, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(req.body),
+export async function analyzeResumeText(text: string) {
+  const response = await fetch('/api/extract-text', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
   });
-
   const data = await response.json();
-  res.status(200).json(data);
+  return typeof data.result === 'string' ? safeParseJSON(data.result) : data;
+}
+
+export async function analyzeJDText(jdText: string) {
+  const response = await fetch('/api/analyze-jd', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ jdText }),
+  });
+  return response.json();
+}
+
+export async function generateBridgeReport(resumeData: any, jdData: any) {
+  const response = await fetch('/api/generate-report', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ resumeData, jdData }),
+  });
+  return response.json();
 }
