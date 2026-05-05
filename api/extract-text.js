@@ -1,20 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
-};
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { fileData, mimeType } = req.body;
+    // Manually parse body if undefined
+    let body = req.body;
+    if (!body || typeof body === 'undefined') {
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      body = JSON.parse(Buffer.concat(chunks).toString());
+    }
+
+    const { fileData, mimeType } = body;
 
     if (!fileData || !mimeType) {
       return res.status(400).json({ error: "fileData and mimeType are required" });
