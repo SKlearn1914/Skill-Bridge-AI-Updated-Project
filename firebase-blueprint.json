@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Resume": {
+      "title": "Resume",
+      "description": "Extracted resume data",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "fileName": { "type": "string" },
+        "rawText": { "type": "string" },
+        "skills": { "type": "array", "items": { "type": "string" } },
+        "experience": { "type": "string" },
+        "education": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "rawText"]
+    },
+    "AnalysisReport": {
+      "title": "Analysis Report",
+      "description": "Skill gap analysis report",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "resumeId": { "type": "string" },
+        "jobTitle": { "type": "string" },
+        "company": { "type": "string" },
+        "matchScore": { "type": "number" },
+        "missingSkills": { "type": "array", "items": { "type": "string" } },
+        "matchedSkills": { "type": "array", "items": { "type": "string" } },
+        "recommendations": { "type": "array", "items": { "type": "string" } },
+        "roadmap": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "resumeId", "matchScore"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "resumes/{resumeId}": {
+      "schema": "Resume",
+      "description": "Stored resumes and extracted skills"
+    },
+    "reports/{reportId}": {
+      "schema": "AnalysisReport",
+      "description": "Generated analysis reports"
+    }
+  }
+}
