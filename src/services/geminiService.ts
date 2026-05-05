@@ -1,13 +1,22 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 const MODEL_NAME = "gemini-2.5-flash";
+
+// Safe JSON parser - strips markdown code blocks
+const safeParseJSON = (text: string) => {
+  const cleaned = text
+    .replace(/```json\n?/gi, '')
+    .replace(/```\n?/gi, '')
+    .trim();
+  return JSON.parse(cleaned);
+};
 
 export async function analyzeResumeText(text: string) {
   const response = await ai.models.generateContent({
     model: MODEL_NAME,
     contents: `Analyze the following resume text and extract key details. 
-      IMPORTANT: Even if the resume is extremely brief or seems like a placeholder, do NOT fail. Infer core skills from any context available. If it's just a name, assume they are a candidate and provide a generalized analysis.
+      IMPORTANT: Even if the resume is extremely brief or seems like a placeholder, do NOT fail. Infer core skills from any context available.
       
       Return a JSON object with EXACTLY these keys:
       - "technicalSkills": (list of strings)
@@ -21,15 +30,15 @@ export async function analyzeResumeText(text: string) {
     }
   });
 
-  return JSON.parse(response.text || '{}');
+  return safeParseJSON(response.text ?? '{}');  // ← fixed
 }
 
 export async function analyzeJDText(jdText: string) {
   console.log('Analyzing JD Text...');
   const response = await ai.models.generateContent({
     model: MODEL_NAME,
-    contents: `Analyze the following Job Description (JD) and extract requirements. 
-      IMPORTANT: Even if the JD is short, do NOT return empty lists. Infer the standard skills usually associated with the job title mentioned. 
+    contents: `Analyze the following Job Description and extract requirements. 
+      IMPORTANT: Even if the JD is short, do NOT return empty lists. Infer standard skills associated with the job title.
       
       Return a JSON object with EXACTLY these keys:
       - "requiredTechnicalSkills": (list of strings)
@@ -43,7 +52,7 @@ export async function analyzeJDText(jdText: string) {
     }
   });
 
-  return JSON.parse(response.text || '{}');
+  return safeParseJSON(response.text ?? '{}');  // ← fixed
 }
 
 export async function generateBridgeReport(resumeData: any, jdData: any) {
@@ -55,36 +64,34 @@ export async function generateBridgeReport(resumeData: any, jdData: any) {
       Candidate Info: ${JSON.stringify(resumeData)}
       Job Requirements: ${JSON.stringify(jdData)}
       
-      Your goal is to provide a roadmap to "bridge the gap". Even if there are very few details, provide a high-quality, professional gap analysis with specific suggestions.
-      
       Return a JSON object with EXACTLY these keys:
       1. "matchScore": (number from 0-100)
       2. "matchedSkills": (list of strings)
       3. "missingSkills": (list of strings)
-      4. "recommendations": (detailed list of actionable strings for resume/profile improvements. Provide at least 5 detailed points.)
+      4. "recommendations": (detailed list of at least 5 actionable strings)
       5. "roadmap": {
-           "weeklyPlan": (list of 6-8 strings for week-by-week progress. Be specific.),
-           "milestones": (list of 4-5 strings for major goals)
+           "weeklyPlan": (list of 6-8 strings),
+           "milestones": (list of 4-5 strings)
          }
-      6. "courseSuggestions": (list of at least 5-8 objects: { 
+      6. "courseSuggestions": (list of 5-8 objects: { 
            "title": string, 
-           "platform": string (e.g., "Coursera", "Udemy", "Harvard CS50", "Google Career Certificates", "YouTube", "Medium", "O'Reilly", "Official Docs"), 
-           "type": string (one of: "course", "article", "book", "video", "blog"),
+           "platform": string, 
+           "type": string,
            "reason": string, 
            "urlHint": string 
          })
       7. "skillAssessment": {
-           "strongPoints": (list of objects: { "skill": string, "impact": string, "level": number (1-10) }),
-           "mediumPoints": (list of objects: { "skill": string, "impact": string, "improvementNeeded": string, "currentProgress": number (percent 0-100) }),
+           "strongPoints": (list of objects: { "skill": string, "impact": string, "level": number }),
+           "mediumPoints": (list of objects: { "skill": string, "impact": string, "improvementNeeded": string, "currentProgress": number }),
            "weakPoints": (list of objects: { "skill": string, "impact": string, "improvementNeeded": string, "priority": "High" | "Medium" })
          }
       8. "categoryBreakdown": { "Technical": number, "Soft Skills": number, "Experience": number, "Education": number }
       
-      Ensure the output is strictly valid JSON.`,
+      Return ONLY raw valid JSON. No markdown, no code blocks, no explanation.`,
     config: {
       responseMimeType: "application/json"
     }
   });
 
-  return JSON.parse(response.text || '{}');
+  return safeParseJSON(response.text ?? '{}');  // ← fixed
 }
