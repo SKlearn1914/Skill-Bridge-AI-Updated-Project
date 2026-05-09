@@ -1,9 +1,8 @@
 <div align="center">
 
-# 🚀 Skill-Bridge AI Resume Analyzer
+🚀 Skill-Bridge AI Resume Analyzer
 
-### AI-Powered Resume Analysis & Job Matching Platform
-
+AI-Powered Resume Analysis & Job Matching Platform
 <p align="center">
   <img src="https://img.shields.io/badge/AI-Powered-blue?style=for-the-badge" />
   <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react" />
@@ -15,21 +14,18 @@
 
 </div>
 
----
+📌 About The Project
 
-# 📌 About The Project
-
-**Skill-Bridge AI Resume Analyzer** is an intelligent AI-powered platform that analyzes resumes according to a provided job description and helps users improve their chances of getting hired.
+Skill-Bridge AI Resume Analyzer** is an intelligent AI-powered platform that analyzes resumes according to a provided job description and helps users improve their chances of getting hired.
 
 The system compares the uploaded resume with the job requirements and provides detailed insights including:
 
-- ✅ Resume Match Percentage
-- ✅ Skill Gap Analysis
-- ✅ ATS-Friendly Recommendations
-- ✅ Missing Skills Detection
-- ✅ Resume Improvement Suggestions
-- ✅ Personalized Career Guidance
-
+-  Resume Match Percentage
+-  Skill Gap Analysis
+-  ATS-Friendly Recommendations
+-  Missing Skills Detection
+-  Resume Improvement Suggestions
+-  Personalized Career Guidance
 This platform is specially designed for:
 - 🎓 Students
 - 👨‍💼 Fresh Graduates
@@ -38,111 +34,96 @@ This platform is specially designed for:
 
 who want to optimize their resumes for modern hiring systems and ATS (Applicant Tracking Systems).
 
----
 
-# ✨ Features
+ ✨ Features
 
-## 🔍 Smart Resume Analysis
+ 🔍 Smart Resume Analysis
 Analyze resumes using advanced AI algorithms.
 
-## 📄 Job Description Matching
+ 📄 Job Description Matching
 Compare resumes directly with job descriptions.
 
-## 📊 Match Score
+ 📊 Match Score
 Get a percentage score showing how well the resume matches the job.
 
-## 🧠 AI Suggestions
+ 🧠 AI Suggestions
 Receive intelligent suggestions to improve resume quality.
 
-## 🎯 Skill Gap Detection
+🎯 Skill Gap Detection
 Identify missing skills required for the target job.
 
 ## ⚡ Fast & Responsive UI
 Clean and modern user interface for better experience.
 
-## 🤖 Gemini AI Integration
+🤖 Gemini AI Integration
 Powered by Google's Gemini AI for accurate analysis.
 
----
 
-# 🛠️ Tech Stack
+ 🛠️ Tech Stack
 
-### Frontend
+ Frontend
 - React.js
 - Tailwind CSS
 - JavaScript
 
-### Backend
+ Backend
 - Node.js
 - Express.js
 
-### AI Integration
+ AI Integration
 - Gemini API
 
----
 
-# ⚙️ Installation & Setup
+ ⚙️ Installation & Setup
 
-## 1️⃣ Clone the Repository
+ 1️⃣ Clone the Repository
 
-```bash
+bash
 git clone https://github.com/your-username/skill-bridge-ai.git
 cd skill-bridge-ai
-```
 
----
 
-## 2️⃣ Install Dependencies
+2️⃣ Install Dependencies
 
-```bash
+bash
 npm install
-```
 
----
-
-## 3️⃣ Configure Environment Variables
+ 3️⃣ Configure Environment Variables
 
 Create a `.env.local` file in the root directory and add your Gemini API key:
 
-```env
+env
 GEMINI_API_KEY=your_api_key_here
-```
 
----
 
-## 4️⃣ Run the Application
+4️⃣ Run the Application
 
-```bash
+bash
 npm run dev
-```
 
----
+ 🚀 How It Works
 
-# 🚀 How It Works
-
-### Step 1
+Step 1
 Upload your Resume
 
-### Step 2
+Step 2
 Paste the Job Description
 
-### Step 3
+Step 3
 AI analyzes the resume and compares it with job requirements
 
-### Step 4
+Step 4
 Receive:
 - Resume Match Score
 - Missing Skills
 - ATS Optimization Tips
 - Personalized Suggestions
 
----
-
-# 🎯 Why Use Skill-Bridge AI?
+ 🎯 Why Use Skill-Bridge AI?
 
 Nowadays, many candidates apply for jobs without knowing whether their resume actually matches the job requirements.
 
-**Skill-Bridge AI** helps solve this problem by providing:
+Skill-Bridge AI helps solve this problem by providing:
 - Better resume optimization
 - Higher ATS compatibility
 - Professional AI feedback
@@ -150,9 +131,7 @@ Nowadays, many candidates apply for jobs without knowing whether their resume ac
 
 This increases the chances of getting shortlisted for interviews.
 
----
-
-# 📈 Future Enhancements
+ 📈 Future Enhancements
 
 - 📑 PDF Resume Parsing
 - 🧾 Multiple Resume Templates
@@ -161,33 +140,29 @@ This increases the chances of getting shortlisted for interviews.
 - 🌐 Multi-Language Support
 - 🧠 Advanced Career Recommendations
 
----
 
-# 🤝 Contribution
+ 🤝 Contribution
 
 Contributions are welcome!
 
-### Steps to Contribute:
+Steps to Contribute:
 1. Fork the repository
 2. Create your feature branch
 3. Commit your changes
 4. Push to the branch
 5. Open a Pull Request
 
----
 
-# 📄 License
+ 📄 License
 
 This project is licensed under the **MIT License**.
 
----
-
 <div align="center">
 
-## ⭐ Support The Project
+⭐ Support The Project
 
 If you like this project, don't forget to ⭐ the repository.
 
-### Made with ❤️ by SK
+Made with ❤️ by SK
 
 </div>
