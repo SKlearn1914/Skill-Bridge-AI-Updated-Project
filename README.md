@@ -79,7 +79,8 @@ Powered by Google's Gemini AI for accurate analysis.
  1️⃣ Clone the Repository
 
 bash
-git clone https://github.com/your-username/skill-bridge-ai.git
+git clone https://github.com/SKlearn1914/Skill-Bridge-AI-Updated-Project.git
+
 cd skill-bridge-ai
 
 
